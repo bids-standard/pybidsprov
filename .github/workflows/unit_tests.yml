@@ -54,7 +54,9 @@ jobs:
       - name: Install bids_prov
         run: uv sync --group tests
       - name: Run tests
-        run: python -m pytest --cov=./ --cov-report=xml
+        run: |
+          source .venv/bin/activate
+          python -m pytest --cov=./ --cov-report=xml
       - uses: codecov/codecov-action@v6
         if: ${{ always() }}
         with:
