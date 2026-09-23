@@ -19,6 +19,8 @@ from rdflib.plugins.sparql import prepareQuery
 from bids import BIDSLayout
 from bids.layout.models import BIDSFile, BIDSJSONFile
 
+BIDS_PROV_CONTEXT = 'https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json'
+
 def get_associated_sidecar(layout: BIDSLayout, data_file: BIDSFile) -> dict:
     """ This function is a workaround to BIDSFile.get_associations function not working with
         derivative datasets.
@@ -133,8 +135,8 @@ def get_entity_record(layout: BIDSLayout, data_file: BIDSFile) -> dict:
     metadata = sidecar.get_dict()
     if 'GeneratedBy' in metadata:
         entity['GeneratedBy'] = metadata['GeneratedBy']
-    if 'Digest' in metadata:
-        entity['Digest'] = metadata['Digest']
+    if 'Checksum' in metadata:
+        entity['Checksum'] = metadata['Checksum']
     if 'Type' in metadata:
         entity['Type'] = metadata['Type']
 
@@ -221,7 +223,7 @@ def merge_records(layout: BIDSLayout, group: str = None) -> dict:
 
     # Base for the output JSON-LD
     base_provenance = {
-      "@context": "https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json",
+      "@context": BIDS_PROV_CONTEXT,
       "Records": {
         "Software": [],
         "Activities": [],

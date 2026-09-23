@@ -1,0 +1,27 @@
+{
+    "Name": "Provenance records for SPM-based fMRI statistical analysis",
+    "BIDSVersion": "1.10.0",
+    "DatasetType": "derivative",
+    "License": "CC0",
+    "Authors": [
+        "Boris Clénet",
+        "Thomas Betton",
+        "Hermann Courteille",
+        "Cyril Regan"
+    ],
+    "GeneratedBy": [
+        "bids::prov#preprocessing-yBHdvts7"
+    ],
+    "SourceDatasets": [
+        {
+            "URL": "ds000011",
+            "Version": "1.0.0"
+        },
+        {
+            "URL": "https://github.com/incf-nidash/nidmresults-examples/"
+        }
+    ],
+    "DatasetLinks": {
+        "ds000011": "https://doi.org/10.18112/openneuro.ds000011.v1.0.0"
+    }
+}
