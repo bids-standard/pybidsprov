@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-""" This module allows to perform sanity checks on JSONLD BIDSprov files. """
+""" This module allows to perform sanity checks on JSON-LD BIDS-Prov files. """
 
 from argparse import ArgumentParser
 import glob
@@ -94,33 +94,22 @@ def analyse_activities(input_file: str):
         len(activities_not_generated))
     logger.info(activities_not_generated)
 
-if __name__ == '__main__':
-
-    # Parse arguments
-    parser = ArgumentParser(description='Analyse JSON-LD graph.')
-    inputs = parser.add_mutually_exclusive_group(required=True)
-    inputs.add_argument('-d', '--input_directory', type=str,
-        help='input directory containing JSONLD files')
-    inputs.add_argument('-f', '--input_file', type=str, help='input JSONLD file')
-    parser.add_argument('-r', '--recursive', action='store_true', required=False, default=False,
-        help='search recursively for files in the input directory')
-    parser.add_argument('-v', '--verbose', action='store_true', help = 'verbose mode')
-    arguments = parser.parse_args()
+def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:bool) -> None:
+    """ Perform sanity check on JSON-LD BIDS-Prov file(s). """
 
     # Init logging
-    if arguments.verbose:
+    if verbose:
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
     logging.StreamHandler().setLevel(logging.DEBUG)
 
     # Analyse files
-    if arguments.input_file:
-        analyse_activities(arguments.input_file)
-    elif arguments.recursive:
-        for file in glob.glob(arguments.input_directory + '/**/*.jsonld', recursive=True):
+    if input_file:
+        analyse_activities(input_file)
+    elif recursive:
+        for file in glob.glob(input_directory + '/**/*.jsonld', recursive=True):
             analyse_activities(file)
     else:
-        for file in glob.glob(arguments.input_directory + '/*.jsonld'):
+        for file in glob.glob(input_directory + '/*.jsonld'):
             analyse_activities(file)
-    arguments = parser.parse_args()
