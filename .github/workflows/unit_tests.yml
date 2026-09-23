@@ -1,0 +1,63 @@
+name: Unit tests for bids_prov utilities
+
+on: [pull_request, push]
+
+jobs:
+  test:
+    # Check each OS, all supported Python, minimum versions and latest releases
+    name: Test
+    runs-on: ${{ matrix.os }}
+    needs: [build]
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        dependencies: ['full']
+        source: ['repo']
+        include:
+          - os: ubuntu-latest
+            python-version: '3.10'
+            dependencies: min
+            source: 'repo'
+          - os: ubuntu-latest
+            python-version: '3'
+            dependencies: full
+            source: 'sdist'
+      fail-fast: false
+
+    env:
+      DEPENDS: ${{ matrix.dependencies }}
+
+    steps:
+      - uses: actions/checkout@v7
+        if: matrix.source == 'repo'
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Download packages built by build-and-inspect-python-package
+        if: matrix.source == 'sdist'
+        uses: actions/download-artifact@v8
+        with:
+          name: Packages
+          path: dist
+      - name: Extract sdist
+        if: matrix.source == 'sdist'
+        run: tar --strip-components=1 -xzf dist/*.tar.gz
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install bids_prov
+        run: uv sync --group tests
+      - name: Run tests
+        run: python -m pytest --cov=./ --cov-report=xml
+      - uses: codecov/codecov-action@v6
+        if: ${{ always() }}
+        with:
+          directory: ./coverage/reports/
+          token: ${{ secrets.CODECOV_TOKEN }}
