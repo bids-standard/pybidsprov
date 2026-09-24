@@ -1,0 +1,253 @@
+{
+    "@context": "https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json",
+    "Records": {
+        "Software": [
+            {
+                "Id": "bids::prov#spm-fa0baf93",
+                "AlternativeIdentifier": [
+                    "RRID:SCR_007037"
+                ],
+                "Label": "SPM",
+                "Version": "SPM12r7771"
+            },
+            {
+                "Id": "bids::prov#spm-fa0baf93",
+                "AlternativeIdentifier": [
+                    "RRID:SCR_007037"
+                ],
+                "Label": "SPM",
+                "Version": "SPM12r7771"
+            }
+        ],
+        "Activities": [
+            {
+                "Id": "bids::prov#movefile-26803be5",
+                "Label": "Move file",
+                "Used": [
+                    "bids:ds000011:sub-01/func/sub-01_task-tonecounting_bold.nii.gz"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{1}.cfg_basicio.file_dir.file_ops.file_move.files = {'data/sub-01/func/sub-01_task-tonecounting_bold.nii.gz'};\nmatlabbatch{1}.cfg_basicio.file_dir.file_ops.file_move.action.copyto = {'sub-01/func'};",
+                "StartedAtTime": "2025-05-28T14:48:00",
+                "EndedAtTime": "2025-05-28T14:48:01"
+            },
+            {
+                "Id": "bids::prov#movefile-bac3f385",
+                "Label": "Move file",
+                "Used": [
+                    "bids:ds000011:sub-01/anat/sub-01_T1w.nii.gz"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{2}.cfg_basicio.file_dir.file_ops.file_move.files = {'data/sub-01/anat/sub-01_T1w.nii.gz'};\nmatlabbatch{2}.cfg_basicio.file_dir.file_ops.file_move.action.copyto = {'sub-01/anat'};",
+                "StartedAtTime": "2025-05-28T14:48:00",
+                "EndedAtTime": "2025-05-28T14:48:01"
+            },
+            {
+                "Id": "bids::prov#gunzip-ca36a952",
+                "Label": "Gunzip",
+                "Used": [
+                    "urn:20953875-19dd-409d-adf1-5ff4404f8ae7"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{3}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = cfg_dep('Move/Delete Files: Moved/Copied Files', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','files'));\nmatlabbatch{3}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};\nmatlabbatch{3}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;",
+                "StartedAtTime": "2025-05-28T14:48:01",
+                "EndedAtTime": "2025-05-28T14:48:02"
+            },
+            {
+                "Id": "bids::prov#gunzip-e9264918",
+                "Label": "Gunzip",
+                "Used": [
+                    "urn:9dff6df8-56be-4d25-a127-b31b20890943"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{4}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = cfg_dep('Move/Delete Files: Moved/Copied Files', substruct('.','val', '{}',{2}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','files'));\nmatlabbatch{4}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};\nmatlabbatch{4}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;",
+                "StartedAtTime": "2025-05-28T14:48:01",
+                "EndedAtTime": "2025-05-28T14:48:02"
+            },
+            {
+                "Id": "bids::prov#realign-acea8093",
+                "Label": "Realign",
+                "Used": [
+                    "urn:ee913e65-93fb-474a-8322-487a9894bd82"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{5}.spm.spatial.realign.estwrite.data{1}(1) = cfg_dep('Gunzip Files: Gunzipped Files', substruct('.','val', '{}',{3}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('()',{':'}));\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.quality = 0.9;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.sep = 4;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.fwhm = 5;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.rtm = 1;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.interp = 2;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.wrap = [0 0 0];\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.weight = '';\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.which = [2 1];\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.interp = 4;\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.wrap = [0 0 0];\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.mask = 1;\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.prefix = 'r';",
+                "StartedAtTime": "2025-05-28T14:48:03",
+                "EndedAtTime": "2025-05-28T14:48:12"
+            },
+            {
+                "Id": "bids::prov#coregister-6d38be4a",
+                "Label": "Coregister",
+                "Used": [
+                    "bids::sub-01/func/meansub-01_task-tonecounting_bold.nii",
+                    "urn:00f98a97-fbfd-49a6-8318-97a89211b9cf"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{6}.spm.spatial.coreg.estimate.ref(1) = cfg_dep('Realign: Estimate & Reslice: Mean Image', substruct('.','val', '{}',{5}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','rmean'));\nmatlabbatch{6}.spm.spatial.coreg.estimate.source(1) = cfg_dep('Gunzip Files: Gunzipped Files', substruct('.','val', '{}',{4}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('()',{':'}));\nmatlabbatch{6}.spm.spatial.coreg.estimate.other = {''};\nmatlabbatch{6}.spm.spatial.coreg.estimate.eoptions.cost_fun = 'nmi';\nmatlabbatch{6}.spm.spatial.coreg.estimate.eoptions.sep = [4 2];\nmatlabbatch{6}.spm.spatial.coreg.estimate.eoptions.tol = [0.02 0.02 0.02 0.001 0.001 0.001 0.01 0.01 0.01 0.001 0.001 0.001];\nmatlabbatch{6}.spm.spatial.coreg.estimate.eoptions.fwhm = [7 7];",
+                "StartedAtTime": "2025-05-28T14:48:12",
+                "EndedAtTime": "2025-05-28T14:48:17"
+            },
+            {
+                "Id": "bids::prov#segment-7d5d4ac5",
+                "Label": "Segment",
+                "Used": [
+                    "urn:c1d082a5-34ee-4282-99df-28c0ba289210",
+                    "bids::sub-01/anat/sub-01_T1w.nii"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{7}.spm.spatial.preproc.channel.vols(1) = cfg_dep('Gunzip Files: Gunzipped Files', substruct('.','val', '{}',{4}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('()',{':'}));\nmatlabbatch{7}.spm.spatial.preproc.channel.biasreg = 0.001;\nmatlabbatch{7}.spm.spatial.preproc.channel.biasfwhm = 60;\nmatlabbatch{7}.spm.spatial.preproc.channel.write = [0 1];\nmatlabbatch{7}.spm.spatial.preproc.tissue(1).tpm = {'/opt/spm12-r7219/spm12_mcr/spm12/tpm/TPM.nii,1'};\nmatlabbatch{7}.spm.spatial.preproc.tissue(1).ngaus = 1;\nmatlabbatch{7}.spm.spatial.preproc.tissue(1).native = [1 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(1).warped = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(2).tpm = {'/opt/spm12-r7219/spm12_mcr/spm12/tpm/TPM.nii,2'};\nmatlabbatch{7}.spm.spatial.preproc.tissue(2).ngaus = 1;\nmatlabbatch{7}.spm.spatial.preproc.tissue(2).native = [1 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(2).warped = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(3).tpm = {'/opt/spm12-r7219/spm12_mcr/spm12/tpm/TPM.nii,3'};\nmatlabbatch{7}.spm.spatial.preproc.tissue(3).ngaus = 2;\nmatlabbatch{7}.spm.spatial.preproc.tissue(3).native = [1 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(3).warped = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(4).tpm = {'/opt/spm12-r7219/spm12_mcr/spm12/tpm/TPM.nii,4'};\nmatlabbatch{7}.spm.spatial.preproc.tissue(4).ngaus = 3;\nmatlabbatch{7}.spm.spatial.preproc.tissue(4).native = [1 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(4).warped = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(5).tpm = {'/opt/spm12-r7219/spm12_mcr/spm12/tpm/TPM.nii,5'};\nmatlabbatch{7}.spm.spatial.preproc.tissue(5).ngaus = 4;\nmatlabbatch{7}.spm.spatial.preproc.tissue(5).native = [1 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(5).warped = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(6).tpm = {'/opt/spm12-r7219/spm12_mcr/spm12/tpm/TPM.nii,6'};\nmatlabbatch{7}.spm.spatial.preproc.tissue(6).ngaus = 2;\nmatlabbatch{7}.spm.spatial.preproc.tissue(6).native = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.tissue(6).warped = [0 0];\nmatlabbatch{7}.spm.spatial.preproc.warp.mrf = 1;\nmatlabbatch{7}.spm.spatial.preproc.warp.cleanup = 1;\nmatlabbatch{7}.spm.spatial.preproc.warp.reg = [0 0.001 0.5 0.05 0.2];\nmatlabbatch{7}.spm.spatial.preproc.warp.affreg = 'mni';\nmatlabbatch{7}.spm.spatial.preproc.warp.fwhm = 0;\nmatlabbatch{7}.spm.spatial.preproc.warp.samp = 3;\nmatlabbatch{7}.spm.spatial.preproc.warp.write = [0 1];\nmatlabbatch{7}.spm.spatial.preproc.warp.vox = NaN;\nmatlabbatch{7}.spm.spatial.preproc.warp.bb = [NaN NaN NaN NaN NaN NaN];",
+                "StartedAtTime": "2025-05-28T14:48:17",
+                "EndedAtTime": "2025-05-28T14:50:10"
+            }
+        ],
+        "Files": [
+            {
+                "Id": "bids:ds000011:sub-01/func/sub-01_task-tonecounting_bold.nii.gz",
+                "Label": "sub-01_task-tonecounting_bold.nii.gz",
+                "AtLocation": "sub-01/func/sub-01_task-tonecounting_bold.nii.gz",
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "c02dc3b622a92fdcdaacb1dd198cd45b4004f326dd1f1abbc4be15a5e4cbc57d"
+                    }
+                ]
+            },
+            {
+                "Id": "bids:ds000011:sub-01/anat/sub-01_T1w.nii.gz",
+                "Label": "sub-01_T1w.nii.gz",
+                "AtLocation": "sub-01/anat/sub-01_T1w.nii.gz",
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "66eeafb465559148e0222d4079558a8354eb09b9efabcc47cd5b8af6eed51907"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:c1d082a5-34ee-4282-99df-28c0ba289210",
+                "Label": "TPM.nii",
+                "AtLocation": "spm12/tpm/TPM.nii",
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "259527f0d92ca5eb0c21684f854e9d8cd7104f9f6a7ebf17ee98de420d9fc68f"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:20953875-19dd-409d-adf1-5ff4404f8ae7",
+                "Label": "sub-01_task-tonecounting_bold.nii.gz",
+                "AtLocation": "sub-01/func/sub-01_task-tonecounting_bold.nii.gz",
+                "GeneratedBy": [
+                    "bids::prov#movefile-26803be5"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "c02dc3b622a92fdcdaacb1dd198cd45b4004f326dd1f1abbc4be15a5e4cbc57d"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:9dff6df8-56be-4d25-a127-b31b20890943",
+                "Label": "sub-01_T1w.nii.gz",
+                "GeneratedBy": [
+                    "bids::prov#movefile-bac3f385"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "66eeafb465559148e0222d4079558a8354eb09b9efabcc47cd5b8af6eed51907"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:ee913e65-93fb-474a-8322-487a9894bd82",
+                "Label": "sub-01_task-tonecounting_bold.nii",
+                "AtLocation": "sub-01/func/sub-01_task-tonecounting_bold.nii",
+                "GeneratedBy": [
+                    "bids::prov#gunzip-ca36a952"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "672fafcd016b2442fcb7df90a6893a97cb1cd19fb70361dc70fb81d755ff74ea"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:00f98a97-fbfd-49a6-8318-97a89211b9cf",
+                "Label": "sub-01_T1w.nii",
+                "AtLocation": "sub-01/anat/sub-01_T1w.nii",
+                "GeneratedBy": [
+                    "bids::prov#gunzip-e9264918"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "45485541db5734f565b7cac3e009f8b02907245fc6db435c700e84d1037773b5"
+                    }
+                ]
+            },
+            {
+                "Id": "bids::sub-01/anat/c1sub-01_T1w.nii",
+                "Label": "c1sub-01_T1w.nii",
+                "AtLocation": "sub-01/anat/c1sub-01_T1w.nii",
+                "GeneratedBy": [
+                    "bids::prov#segment-7d5d4ac5"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "4ee9cdc19e6d2d15c79d1a0435542b302b31b576c6f40394ec1d55b3cc7351a1"
+                    }
+                ]
+            },
+            {
+                "Id": "bids::sub-01/anat/sub-01_T1w.nii",
+                "Label": "sub-01_T1w.nii",
+                "AtLocation": "sub-01/anat/sub-01_T1w.nii",
+                "GeneratedBy": [
+                    "bids::prov#coregister-6d38be4a"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "f29cb68cce4cb3aa2ccbc791aceff3705a23e07dfc40c045a7ce3879ebc1f338"
+                    }
+                ]
+            },
+            {
+                "Id": "bids::sub-01/func/meansub-01_task-tonecounting_bold.nii",
+                "Label": "meansub-01_task-tonecounting_bold.nii",
+                "AtLocation": "sub-01/func/meansub-01_task-tonecounting_bold.nii",
+                "GeneratedBy": [
+                    "bids::prov#realign-acea8093"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "a4a7dd08d305ada75d3c3643dc5f1b96a6d5d94657f8aea79b6d15431845179a"
+                    }
+                ]
+            }
+        ],
+        "Datasets": [],
+        "prov:Entity": [],
+        "Environments": []
+    }
+}
