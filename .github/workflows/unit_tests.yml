@@ -83,6 +83,11 @@ jobs:
         run: python -c "import sys; print(sys.version)"
       - name: Install bids_prov
         run: uv sync --group tests
+      - name: Get tests and test data
+        uses: actions/checkout@v7
+        with:
+        sparse-checkout: |
+          tests
       - name: Run tests
         run: |
           source .venv/bin/activate
