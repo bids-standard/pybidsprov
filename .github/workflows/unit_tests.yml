@@ -86,7 +86,7 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          python -m pytest --cov=./ --cov-report=xml
+          python -m pytest --cov=./coverage/reports/ --cov-report=xml
       - uses: codecov/codecov-action@v6
         if: ${{ always() }}
         with:
