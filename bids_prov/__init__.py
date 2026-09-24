@@ -21,7 +21,7 @@ def entry_point():
 
     # Parser for the merge command
     parser_merge = sub_commands.add_parser('merge',
-        help='Merge all provenance metadata from a BIDS dataset into one JSON-LD file.')
+        help='Merge all provenance metadata from a BIDS dataset into one JSON-LD BIDS-Prov file.')
     parser_merge.add_argument('--dataset', '-d', type=str, default='.',
         help='The path to the input BIDS dataset. Do not provide this argument if the\
         dataset is in the current directory.')
@@ -34,17 +34,17 @@ def entry_point():
 
     # Parser for the extract command
     parser_extract = sub_commands.add_parser('extract',
-        help='Generate the subgraph containing ancestors to a given node.')
+        help='Generate the provenance graph of a given prov:Entity in a BIDS dataset from a JSON-LD BIDS-Prov file.')
     parser_extract.add_argument('--input_file', '-i', type=str, required=True,
-        help='Complete graph as a JSON-LD file.')
+        help='Provenance graph as a JSON-LD file.')
     parser_extract.add_argument('--node_id', '-n', type=str, required=True,
-        help='Identifier for the starting node.')
+        help='Identifier for the prov:Entity.')
     parser_extract.add_argument('--output_file', '-o', type=str, required=True,
         help='Name for the output JSON-LD file containing the subgraph.')
 
     # Parser for the check command
     parser_check = sub_commands.add_parser('check',
-        help='Sanity check on a JSON-LD BIDS-Prov graph.')
+        help='Sanity check on a JSON-LD BIDS-Prov file.')
     parser_check_inputs = parser_check.add_mutually_exclusive_group(required=True)
     parser_check_inputs.add_argument('-i', '--input_file', type=str, help='Input JSON-LD file.')
     parser_check_inputs.add_argument('-d', '--input_directory', type=str,
@@ -55,7 +55,7 @@ def entry_point():
 
     # Parser for the visualize command
     parser_visualize = sub_commands.add_parser('visualize',
-        help='Generate a `graphviz` graph as PNG file from BIDS-Prov data in a JSON-LD file')
+        help='Generate a `graphviz` graph as PNG file from a JSON-LD BIDS-Prov file.')
     parser_visualize.add_argument('--input_file', '-i', type=str, required=True,
         help='Input BIDS-Prov data as a JSON-LD file.')
     parser_visualize.add_argument('--output_file', '-o', type=str,
