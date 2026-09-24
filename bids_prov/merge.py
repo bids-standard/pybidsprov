@@ -7,7 +7,6 @@
 
 from pathlib import Path
 import json
-from argparse import ArgumentParser
 from io import StringIO
 
 from pyld import jsonld
@@ -31,7 +30,7 @@ def get_associated_sidecar(layout: BIDSLayout, data_file: BIDSFile) -> dict:
     filename = Path(data_file.path)
     extensions = ''.join(filename.suffixes)
     sidecar_filename = str(filename).replace(extensions, '.json')
-    
+
     return layout.get_file(sidecar_filename)
 
 def filter_provenance_group(files: list, group: str) -> list:
@@ -283,7 +282,7 @@ def entry_point(dataset: str, derivative: bool, output_file: str, entity: str):
         file.write(
             json.dumps(
                 merge_records(
-                    BIDSLayout(dataset, is_derivative=derivative),
+                    BIDSLayout(dataset, validate=False, is_derivative=derivative),
                     entity
                 ),
                 indent = 2

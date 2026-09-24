@@ -16,12 +16,14 @@ pip install pybidsprov
 
 PyBIDSProv consists in a main command line tool `bids_prov`, giving access to several sub commands:
 
-- `merge`: Merge all provenance metadata from a BIDS dataset into one JSON-LD BIDS-Prov file.
-- `extract`: Generate the provenance graph of a given prov:Entity in a BIDS dataset from a JSON-LD BIDS-Prov file.
-- `check`: Sanity check on a JSON-LD BIDS-Prov file.
-- `visualize`: Generate a *graphviz* graph as PNG file from a JSON-LD BIDS-Prov file.
+- `merge`: Aggregates all provenance metadata available in a BIDS dataset to generate a provenance graph inside a single JSON-LD file.
+- `extract`: Isolates the provenance graph of a given prov:Entity (e.g. a file, dataset or another prov:Entity) and generates a provenance graph inside a JSON-LD file.
+- `check`: Perform a sanity check on a proveance graph contained in a JSON-LD file.
+- `visualize`: Generates an image (*graphviz* graph) representing a proveance graph contained in a JSON-LD file.
 
-### Merge provenance metadata of a BIDS dataset
+### `bids_prov merge` - Aggregate the provenance metadata of a BIDS dataset
+
+> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
 
 ```shell
 bids_prov merge -h
@@ -67,7 +69,8 @@ Let's assume the following BIDS dataset.
 # Merge provenance metadata from files marked with 🟠 or 🔵 inside a single JSON-LD file
 bids_prov merge -o prov/prov-proc1.jsonld
 
-# You can focus on a BIDS entity: the following command merges provenance metadata from files marked with 🔵
+# You can focus on a BIDS entity
+# The following command merges provenance metadata from files marked with 🔵
 bids_prov merge -o prov/prov-proc1.jsonld -e proc1
 
 # You can specify the dataset location too (it is the current directory by default)
@@ -107,7 +110,9 @@ The output JSON-LD file looks like:
 }
 ```
 
-### Generate the provenance graph of a given prov:Entity
+### `bids_prov extract` - Isolate the provenance of a given prov:Entity
+
+> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
 
 ```shell
 bids_prov merge -h
@@ -126,32 +131,17 @@ bids_prov merge -h
 Knowing the identifier of a prov:Entity of interest (a file, dataset or another prov:Entity) inside an input JSON-LD file representing a provenance graph, you are able to generate a sub-graph that includes the nodes involved in the provenance of this prov:Entity only.
 
 ```shell
-# Merge provenance metadata from files marked with 🟠 or 🔵 inside a single JSON-LD file
-bids_prov extract -i prov/prov-proc1.jsonld
-
-# You can focus on a BIDS entity: the following command merges provenance metadata from files marked with 🔵
-bids_prov merge -o prov/prov-proc1.jsonld -e proc1
-
-# You can specify the dataset location too (it is the current directory by default)
-bids_prov merge -o prov/prov-proc1.jsonld -d path/to/another/dataset
-
-# Use the --derivative option when working with a BIDS derivative dataset
-bids_prov merge -o prov/prov-proc1.jsonld --derivative
+bids_prov extract -i prov/prov-proc1.jsonld -n bids::sub-01/anat/sub-01_T1w.nii -o prov/prov-sub01T1w.jsonld
 ```
 
+### `bids_prov check` - Perform a sanity check on a provenance graph
+
+> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
 
 
+### `bids_prov visualize` - Visualize a provenance graph as an image
 
-### Sanity check on a JSON-LD BIDS-Prov file
-
-### Visualize provenance as an image
-
-
-
-
-
-
-
+> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
 
 
 ## Development and testing
