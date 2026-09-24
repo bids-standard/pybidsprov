@@ -23,7 +23,8 @@ PyBIDSProv consists in a main command line tool `bids_prov`, giving access to se
 
 ### `bids_prov merge` - Aggregate the provenance metadata of a BIDS dataset
 
-> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
+> [!TIP]
+> Find executable examples for this command inside the [doc/examples.md](doc/examples.md) file.
 
 ```shell
 bids_prov merge -h
@@ -112,7 +113,8 @@ The output JSON-LD file looks like:
 
 ### `bids_prov extract` - Isolate the provenance of a given prov:Entity
 
-> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
+> [!TIP]
+> Find executable examples for this command inside the [doc/examples.md](doc/examples.md) file.
 
 ```shell
 bids_prov merge -h
@@ -136,12 +138,14 @@ bids_prov extract -i prov/prov-proc1.jsonld -n bids::sub-01/anat/sub-01_T1w.nii 
 
 ### `bids_prov check` - Perform a sanity check on a provenance graph
 
-> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
+> [!TIP]
+> Find executable examples for this command inside the [doc/examples.md](doc/examples.md) file.
 
 
 ### `bids_prov visualize` - Visualize a provenance graph as an image
 
-> [!TIP] Find executable examples for this command inside the [docs/examples.md](docs/examples.md) file.
+> [!TIP]
+> Find executable examples for this command inside the [doc/examples.md](doc/examples.md) file.
 
 
 ## Development and testing
