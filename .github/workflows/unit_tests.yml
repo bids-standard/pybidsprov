@@ -2,11 +2,41 @@ name: Unit tests for bids_prov utilities
 
 on: [pull_request, push]
 
+defaults:
+  run:
+    shell: bash
+
+# Force pytest to use color
+env:
+  FORCE_COLOR: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
+  build:
+    name: Build & verify package
+    runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: hynek/build-and-inspect-python-package@v2
+        with:
+          attest-build-provenance-github: ${{ github.event_name != 'pull_request' }}
+
   test:
     # Check each OS, all supported Python, minimum versions and latest releases
     name: Test
     runs-on: ${{ matrix.os }}
+    needs: [build]
     strategy:
       matrix:
         os: ['ubuntu-latest', 'macos-latest']
