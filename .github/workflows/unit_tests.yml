@@ -84,6 +84,7 @@ jobs:
       - name: Install bids_prov
         run: uv sync --group tests
       - name: Get tests and test data
+        if: matrix.source == 'sdist'
         uses: actions/checkout@v7
         with:
           sparse-checkout: |
