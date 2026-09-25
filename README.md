@@ -24,7 +24,7 @@ PyBIDSProv consists in a main command line tool `bids_prov`, giving access to se
 ### `bids_prov merge` - Aggregate the provenance metadata of a BIDS dataset
 
 > [!TIP]
-> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md) file.
+> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md#bids_prov-merge-examples) file.
 
 ```shell
 bids_prov merge -h
@@ -43,81 +43,13 @@ bids_prov merge -h
 
 Run this command from inside a BIDS dataset containing provenance metadata inside e.g. `dataset_description.json`, `prov/` files or JSON sidecars.
 
-Let's assume the following BIDS dataset.
-```
-.
-├── dataset_description.json 🔵
-├── prov
-│   ├── prov-proc1_act.json 🔵
-│   ├── prov-proc1_env.json 🔵
-│   ├── prov-proc1_io.json 🔵
-│   ├── prov-proc1_soft.json 🔵
-│   ├── prov-proc2_act.json 🟠
-│   ├── prov-proc2_env.json 🟠
-│   ├── prov-proc2_io.json 🟠
-│   └── prov-proc2_soft.json 🟠
-├── README.md
-└── sub-01
-    ├── anat
-    │   ├── sub-01_T1w.json 🔵
-    │   └── sub-01_T1w.nii
-    └── func
-        ├── sub-01_task-tonecounting_bold.json 🔵
-        └── sub-01_task-tonecounting_bold.nii
-```
-
-```shell
-# Merge provenance metadata from files marked with 🟠 or 🔵 inside a single JSON-LD file
-bids_prov merge -o prov/prov-proc1.jsonld
-
-# You can focus on a BIDS entity
-# The following command merges provenance metadata from files marked with 🔵
-bids_prov merge -o prov/prov-proc1.jsonld -e proc1
-
-# You can specify the dataset location too (it is the current directory by default)
-bids_prov merge -o prov/prov-proc1.jsonld -d path/to/another/dataset
-
-# Use the --derivative option when working with a BIDS derivative dataset
-bids_prov merge -o prov/prov-proc1.jsonld --derivative
-```
-
-The output JSON-LD file looks like:
-
-```JSON
-{
-  "@context": "https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json",
-  "Records": {
-    "Software": [
-      {
-        "Id": "bids::prov#spm-fa0baf93",
-        "AlternativeIdentifier": [
-          "RRID:SCR_007037"
-        ],
-        "Label": "SPM",
-        "Version": "SPM12r7771"
-      }
-    ],
-    "Activities": [
-      {
-        "Id": "bids::prov#preprocessing-yBHdvts7",
-        "Label": "Preprocessing",
-        "AssociatedWith": [
-          "bids::prov#spm-fa0baf93"
-        ]
- 	  }
-    ]
-    ...
-  }
-}
-```
-
 ### `bids_prov extract` - Isolate the provenance of a given prov:Entity
 
 > [!TIP]
-> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md) file.
+> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md#bids_prov-extract-examples) file.
 
 ```shell
-bids_prov merge -h
+bids_prov extract -h
 	usage: bids_prov extract [-h] --input_file INPUT_FILE --node_id NODE_ID --output_file OUTPUT_FILE
 
 	options:
@@ -132,21 +64,50 @@ bids_prov merge -h
 
 Knowing the identifier of a prov:Entity of interest (a file, dataset or another prov:Entity) inside an input JSON-LD file representing a provenance graph, you are able to generate a sub-graph that includes the nodes involved in the provenance of this prov:Entity only.
 
-```shell
-bids_prov extract -i prov/prov-proc1.jsonld -n bids::sub-01/anat/sub-01_T1w.nii -o prov/prov-sub01T1w.jsonld
-```
-
 ### `bids_prov check` - Perform a sanity check on a provenance graph
 
 > [!TIP]
-> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md) file.
+> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md#bids_prov-check-examples) file.
 
+```shell
+bids_prov check -h
+	usage: bids_prov check [-h] (-i INPUT_FILE | -d INPUT_DIRECTORY) [-r] [-v]
+
+	options:
+	  -h, --help            show this help message and exit
+	  -i INPUT_FILE, --input_file INPUT_FILE
+	                        Input JSON-LD file.
+	  -d INPUT_DIRECTORY, --input_directory INPUT_DIRECTORY
+	                        Input directory containing JSON-LD files.
+	  -r, --recursive       Search recursively for files in the input directory.
+	  -v, --verbose         verbose mode
+```
+
+Pass a JSON-LD file or a directory containing JSON-LD files to perform sanity checks on the corresponding provenance graphs.
+This will list:
+* All prov:Activities that did not use any prov:Entity.
+* All prov:Activity that did not generate any prov:Entity.
 
 ### `bids_prov visualize` - Visualize a provenance graph as an image
 
 > [!TIP]
-> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md) file.
+> Find executable examples for this command inside the [doc/examples.md](/doc/examples.md#bids_prov-visualize-examples) file.
 
+```shell
+bids_prov visualize -h
+	usage: bids_prov visualize [-h] --input_file INPUT_FILE [--output_file OUTPUT_FILE] [--detailed]
+
+	options:
+	  -h, --help            show this help message and exit
+	  --input_file INPUT_FILE, -i INPUT_FILE
+	                        Input BIDS-Prov data as a JSON-LD file.
+	  --output_file OUTPUT_FILE, -o OUTPUT_FILE
+	                        Name for the output PNG file showing the `graphviz` graph. If not provided, the input name
+	                        stem will be used for the output file name.
+	  --detailed, -d        Set this option to write a detailed version of the graph.
+```
+
+This allows to generate a PNG file containing a Graphviz graph illustrating what is inside a JSON-LD file.
 
 ## Development and testing
 
