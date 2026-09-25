@@ -89,7 +89,7 @@ def subtype_datasets(turtle: str) -> str:
         GROUP BY ?s
     """,
     initNs = {'prov': PROV})
-   
+
     for triple in graph.query(query):
         graph.update(f"""
             INSERT DATA {{
@@ -126,7 +126,7 @@ def turtle_to_image(turtle: str, output_file: str, detailed: bool) -> None:
 
 def jsonld11_to_jsonld10(jsonld_11: dict) -> dict:
     """ Convert JSON-LD 1.1 data into JSON-LD 1.0 data.
-        TODO: how / what ? Without type indexing
+        (Basically removing type indexing)
 
         jsonld_11: dict
             JSON-LD data, usually obtained by calling `json.load`
