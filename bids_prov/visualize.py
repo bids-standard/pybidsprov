@@ -10,9 +10,95 @@ from os.path import splitext
 
 import requests
 from pyld.jsonld import compact
-from rdflib import Dataset
+from rdflib import Dataset, Graph
+from rdflib.namespace import PROV
+from rdflib.plugins.sparql import prepareQuery
 from prov.dot import prov_to_dot
 from prov.model import ProvDocument
+
+def replace_dataset_ids(turtle: str) -> str:
+    """ For visualization puroposes only, modify the dataset names in the graph
+        so that they are considered as valid. There is indeed an issue with the :.
+        at the end of the URI.
+
+        turtle: str,
+            Graph as turtle content
+
+        Return the same turtle graph with modified identifiers for datasets
+    """
+    graph = Graph()
+    graph.parse(data=turtle, format='turtle')
+
+    # Select all the triples that have a subject or an object of type prov:Collection
+    query = prepareQuery("""
+        SELECT ?s ?p ?o
+        WHERE {
+        {
+            ?s a prov:Collection .
+            ?s ?p ?o .
+        }
+        UNION
+        {
+            ?o a prov:Collection .
+            ?s ?p ?o .        
+        }
+    }""",
+    initNs = {'prov': PROV})
+    query_results = graph.query(query)
+
+    # Modify the found triples
+    for triple in query_results:
+        replacement_subject = triple.s.n3(graph.namespace_manager).replace(
+            'bids::.', 'bids:ds').replace(':.', '')
+        replacement_object = triple.o.n3(graph.namespace_manager).replace(
+            'bids::.', 'bids:ds').replace(':.', '')
+
+        graph.update(f"""
+            DELETE DATA {{
+                {triple.s.n3(graph.namespace_manager)}
+                {triple.p.n3(graph.namespace_manager)}
+                {triple.o.n3(graph.namespace_manager)}
+            }}""")
+        graph.update(f"""
+            INSERT DATA {{
+            {replacement_subject}
+            {triple.p.n3(graph.namespace_manager)}
+            {replacement_object}
+            }}""")
+
+    return graph.serialize(format='turtle')
+
+def subtype_datasets(turtle: str) -> str:
+    """ For visualization puroposes only, add the subtype prov:Entity to datasets in the graph
+        so that they are rendered as such.
+
+        turtle: str,
+            Graph as turtle content
+
+        Return the same turtle graph with one new triple per dataset, specifying it is a prov:Entity
+    """
+    graph = Graph()
+    graph.parse(data=turtle, format='turtle')
+
+    # Select all the triples that have a subject or an object of type prov:Collection
+    query = prepareQuery("""
+        SELECT ?s ?p ?o
+        WHERE {
+            ?s a prov:Collection .
+            }
+        GROUP BY ?s
+    """,
+    initNs = {'prov': PROV})
+   
+    for triple in graph.query(query):
+        graph.update(f"""
+            INSERT DATA {{
+            {triple.s.n3(graph.namespace_manager)}
+            a
+            prov:Entity
+            }}""")
+
+    return graph.serialize(format='turtle')
 
 def turtle_to_image(turtle: str, output_file: str, detailed: bool) -> None:
     """ Write PNG graph visualization from RDF turtle graph content.
@@ -95,6 +181,8 @@ def entry_point(filename: str, output_file:str, detailed:bool) -> None:
 
     graph_data = jsonld11_to_jsonld10(graph_data)
     graph_data = jsonld10_to_turtle(graph_data)
+    graph_data = replace_dataset_ids(graph_data)
+    graph_data = subtype_datasets(graph_data)
 
     # Name for the output file
     if output_file is None:
