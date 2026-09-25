@@ -17,19 +17,15 @@ from rdflib.plugins.sparql import prepareQuery
 
 logger = logging.getLogger(__name__)
 
-def analyse_activities(input_file: str):
+def analyse_activities(jsonld_11: dict):
     """ Print a report showing:
          - All prov:Activity that did not use any prov:Entity
          - All prov:Activity that did not generated any prov:Entity
+
+        jsonld_11: dict, input graph data to analyse
     """
-    logger.info('Analyse activities for file %s', input_file)
-
-    # Open JSON-LD content
-    with open(input_file, 'r', encoding = 'utf-8') as file_stream:
-        input_graph = json.load(file_stream)
-
     # Expand the input JSON-LD
-    expanded = jsonld.expand(input_graph)
+    expanded = jsonld.expand(jsonld_11)
 
     # Open file & create graph from it
     graph = Dataset()
@@ -104,12 +100,21 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
         logging.basicConfig(level=logging.INFO)
     logging.StreamHandler().setLevel(logging.DEBUG)
 
-    # Analyse files
+    # List file(s)
+    file_list = []
     if input_file:
-        analyse_activities(input_file)
+        file_list.append(input_file)
     elif recursive:
         for file in glob.glob(input_directory + '/**/*.jsonld', recursive=True):
-            analyse_activities(file)
+            file_list.append(file)
     else:
         for file in glob.glob(input_directory + '/*.jsonld'):
-            analyse_activities(file)
+            file_list.append(file)
+
+    # Analyse file(s)
+    for file in file_list:
+        logger.info('Analyse activities for file %s', file)
+    
+        # Open JSON-LD content & analyse
+        with open(file, 'r', encoding = 'utf-8') as file_stream:
+            analyse_activities(json.load(file_stream))

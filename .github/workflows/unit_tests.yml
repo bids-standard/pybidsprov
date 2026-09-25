@@ -1,0 +1,95 @@
+name: Unit tests for bids_prov utilities
+
+on: [pull_request, push]
+
+defaults:
+  run:
+    shell: bash
+
+# Force pytest to use color
+env:
+  FORCE_COLOR: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build & verify package
+    runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: hynek/build-and-inspect-python-package@v2
+        with:
+          attest-build-provenance-github: ${{ github.event_name != 'pull_request' }}
+
+  test:
+    # Check each OS, all supported Python, minimum versions and latest releases
+    name: Test
+    runs-on: ${{ matrix.os }}
+    needs: [build]
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        dependencies: ['full']
+        source: ['repo']
+        include:
+          - os: ubuntu-latest
+            python-version: '3.10'
+            dependencies: min
+            source: 'repo'
+          - os: ubuntu-latest
+            python-version: '3'
+            dependencies: full
+            source: 'sdist'
+      fail-fast: false
+
+    env:
+      DEPENDS: ${{ matrix.dependencies }}
+
+    steps:
+      - uses: actions/checkout@v7
+        if: matrix.source == 'repo'
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Download packages built by build-and-inspect-python-package
+        if: matrix.source == 'sdist'
+        uses: actions/download-artifact@v8
+        with:
+          name: Packages
+          path: dist
+      - name: Extract sdist
+        if: matrix.source == 'sdist'
+        run: tar --strip-components=1 -xzf dist/*.tar.gz
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install bids_prov
+        run: uv sync --group tests
+      - name: Get tests and test data
+        if: matrix.source == 'sdist'
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            tests
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          python -m pytest --cov=./

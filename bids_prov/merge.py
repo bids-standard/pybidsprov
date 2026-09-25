@@ -7,7 +7,6 @@
 
 from pathlib import Path
 import json
-from argparse import ArgumentParser
 from io import StringIO
 
 from pyld import jsonld
@@ -19,6 +18,8 @@ from rdflib.plugins.sparql import prepareQuery
 from bids import BIDSLayout
 from bids.layout.models import BIDSFile, BIDSJSONFile
 
+BIDS_PROV_CONTEXT = 'https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json'
+
 def get_associated_sidecar(layout: BIDSLayout, data_file: BIDSFile) -> dict:
     """ This function is a workaround to BIDSFile.get_associations function not working with
         derivative datasets.
@@ -29,7 +30,7 @@ def get_associated_sidecar(layout: BIDSLayout, data_file: BIDSFile) -> dict:
     filename = Path(data_file.path)
     extensions = ''.join(filename.suffixes)
     sidecar_filename = str(filename).replace(extensions, '.json')
-    
+
     return layout.get_file(sidecar_filename)
 
 def filter_provenance_group(files: list, group: str) -> list:
@@ -133,8 +134,8 @@ def get_entity_record(layout: BIDSLayout, data_file: BIDSFile) -> dict:
     metadata = sidecar.get_dict()
     if 'GeneratedBy' in metadata:
         entity['GeneratedBy'] = metadata['GeneratedBy']
-    if 'Digest' in metadata:
-        entity['Digest'] = metadata['Digest']
+    if 'Checksum' in metadata:
+        entity['Checksum'] = metadata['Checksum']
     if 'Type' in metadata:
         entity['Type'] = metadata['Type']
 
@@ -221,7 +222,7 @@ def merge_records(layout: BIDSLayout, group: str = None) -> dict:
 
     # Base for the output JSON-LD
     base_provenance = {
-      "@context": "https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json",
+      "@context": BIDS_PROV_CONTEXT,
       "Records": {
         "Software": [],
         "Activities": [],
@@ -281,7 +282,7 @@ def entry_point(dataset: str, derivative: bool, output_file: str, entity: str):
         file.write(
             json.dumps(
                 merge_records(
-                    BIDSLayout(dataset, is_derivative=derivative),
+                    BIDSLayout(dataset, validate=False, is_derivative=derivative),
                     entity
                 ),
                 indent = 2

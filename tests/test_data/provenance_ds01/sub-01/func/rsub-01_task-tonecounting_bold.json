@@ -1,0 +1,11 @@
+{
+    "GeneratedBy": [
+        "bids::prov#realign-acea8093"
+    ],
+    "Checksum": [
+        {
+            "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+            "ChecksumValue": "4aa86c3237d1e8b23417b91e2cb919b59e4aa5fae9beb803fa916c906926bded"
+        }
+    ]
+}
