@@ -73,7 +73,8 @@ def analyse_activities(jsonld_11: dict):
     # Search for all prov:Activity that generated entities
     query = prepareQuery("""
         SELECT ?s ?p ?o WHERE {
-            ?s a prov:Entity .
+            VALUES ?type { prov:Entity prov:Collection } 
+            ?s a ?type .
             ?s prov:wasGeneratedBy ?o .
             ?s ?p ?o .
         }
