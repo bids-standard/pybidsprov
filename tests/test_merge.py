@@ -3,16 +3,16 @@
 
 """ Tests for the bids_prov.merge module """
 
-from os.path import abspath, join
+from os import remove
+from os.path import abspath, join, exists
 import json
-import unittest
 
 from bids import BIDSLayout
 from bids_prov.merge import (
     filter_provenance_group, get_provenance_files,
     get_described_datasets, get_described_files, get_described_sidecars,
     get_dataset_entity_record, get_entity_record, get_sidecar_entity_record,
-    get_linked_entities, merge_records
+    get_linked_entities, merge_records, entry_point
     )
 
 TEST_DATA_DIR = abspath(join('tests', 'test_data'))
@@ -25,10 +25,11 @@ TEST_DATAFILE_2 = TEST_DATASET_2.get()[7]
 TEST_DATASET_3 = BIDSLayout(join(TEST_DATA_DIR, 'provenance_ds03'), validate=False, is_derivative=True)
 TEST_DESCRIPTIONFILE_2 = TEST_DATASET_3.get()[0]
 
-class TestMergeFunctions(unittest.TestCase):
+class TestMergeFunctions():
     """ All tests for the bids_prov.merge module """
 
-    def test_filter_provenance_group(self):
+    @staticmethod
+    def test_filter_provenance_group():
         """ Test the filter_provenance_group function """
 
         file_list = TEST_DATASET_1.get()
@@ -44,7 +45,8 @@ class TestMergeFunctions(unittest.TestCase):
         assert not filter_provenance_group(file_list, 'dcm2niix')
         assert not filter_provenance_group(file_list, 'bold')
 
-    def test_get_provenance_files(self):
+    @staticmethod
+    def test_get_provenance_files():
         """ Test the get_provenance_files function """
 
         assert not get_provenance_files(TEST_DATASET_0, 'env', 'spm')
@@ -84,7 +86,8 @@ class TestMergeFunctions(unittest.TestCase):
         assert len(out_list) == 1
         assert out_list[0].filename == 'prov-spm_soft.json'
 
-    def test_get_described_datasets(self):
+    @staticmethod
+    def test_get_described_datasets():
         """ Test the get_described_datasets function """
 
         assert not get_described_datasets(TEST_DATASET_0)
@@ -101,7 +104,8 @@ class TestMergeFunctions(unittest.TestCase):
         assert described_datasets[0].relpath == 'dataset_description.json'
         assert described_datasets[0].filename == 'dataset_description.json'
 
-    def test_get_described_files(self):
+    @staticmethod
+    def test_get_described_files():
         """ Test the get_described_files function """
 
         assert not get_described_files(TEST_DATASET_0)
@@ -122,7 +126,8 @@ class TestMergeFunctions(unittest.TestCase):
 
         assert not get_described_files(TEST_DATASET_3)
 
-    def test_get_described_sidecars(self):
+    @staticmethod
+    def test_get_described_sidecars():
         """ Test the get_described_sidecars function """
 
         assert not get_described_sidecars(TEST_DATASET_0)
@@ -136,7 +141,8 @@ class TestMergeFunctions(unittest.TestCase):
 
         assert not get_described_sidecars(TEST_DATASET_3)
 
-    def test_get_dataset_entity_record(self):
+    @staticmethod
+    def test_get_dataset_entity_record():
         """ Test the get_dataset_entity_record function """
 
         entity = get_dataset_entity_record(TEST_DESCRIPTIONFILE_1)
@@ -153,7 +159,8 @@ class TestMergeFunctions(unittest.TestCase):
             'GeneratedBy': ['bids::prov#preprocessing-xMpFqB5q']
             }
 
-    def test_get_entity_record(self):
+    @staticmethod
+    def test_get_entity_record():
         """ Test the get_entity_record function """
 
         entity = get_entity_record(TEST_DATASET_1, TEST_DATAFILE_1)
@@ -178,7 +185,8 @@ class TestMergeFunctions(unittest.TestCase):
             'GeneratedBy': ['bids::prov#conversion-00f3a18f']
             }
 
-    def test_get_sidecar_entity_record(self):
+    @staticmethod
+    def test_get_sidecar_entity_record():
         """ Test the get_sidecar_entity_record function """
 
         entity = get_sidecar_entity_record(TEST_DATASET_2, TEST_DATAFILE_2)
@@ -189,7 +197,8 @@ class TestMergeFunctions(unittest.TestCase):
             'GeneratedBy': ['bids::prov#conversion-00f3a18f']
             }
 
-    def test_get_linked_entities(self):
+    @staticmethod
+    def test_get_linked_entities():
         """ Test the get_linked_entities function """
 
         with open(join(TEST_DATA_DIR, 'test_linked_entities.jsonld'),
@@ -200,7 +209,8 @@ class TestMergeFunctions(unittest.TestCase):
             for entity_id in ['urn:not_used', 'urn:not_generated']:
                 assert entity_id in linked_entities
 
-    def test_merge_records(self):
+    @staticmethod
+    def test_merge_records():
         """ Test the merge_records function """
 
         # Tests for groups that are not present
@@ -242,5 +252,30 @@ class TestMergeFunctions(unittest.TestCase):
             assert merge_records(TEST_DATASET_3) == json_contents
             assert merge_records(TEST_DATASET_3, 'fmriprep') == json_contents
 
-if __name__ == '__main__':
-    unittest.main()
+    @staticmethod
+    def test_entry_point(helpers):
+        """ Test the entry_point function """
+
+        output_filename = 'test_merge_entry_point.json-ld'
+
+        if exists(output_filename):
+            remove(output_filename)
+
+        entry_point(join(TEST_DATA_DIR, 'provenance_ds00'), True, output_filename, None)
+        assert exists(output_filename)
+        assert helpers.compare_files(output_filename, join(TEST_DATA_DIR, 'provenance_ds00.jsonld'))
+
+        remove(output_filename)
+
+        entry_point(join(TEST_DATA_DIR, 'provenance_ds01'), True, output_filename, 'preprocessing')
+        assert exists(output_filename)
+        assert helpers.compare_files(
+            output_filename, join(TEST_DATA_DIR, 'provenance_ds01_preprocessing.jsonld'))
+
+        remove(output_filename)
+
+        entry_point(join(TEST_DATA_DIR, 'provenance_ds02'), False, output_filename, None)
+        assert exists(output_filename)
+        assert helpers.compare_files(output_filename, join(TEST_DATA_DIR, 'provenance_ds02.jsonld'))
+
+        remove(output_filename)

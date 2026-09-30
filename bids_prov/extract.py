@@ -11,21 +11,15 @@ from pyld import jsonld
 from rdflib import Dataset
 from rdflib.plugins.sparql import prepareQuery
 
-""" Extract the subgraph corresponding to all nodes connected to a given node.
-    This was design for prov:Entity as starting node, to show the whole process
-    that was needed to generate this prov:Entity.
- """
-
-def entry_point(input_file: str, node_id: str, output_file: str) -> None:
-    """ Search for all nodes linked to a prov:Entity """
-
-    # Open and read input file
-    with open(input_file, 'r', encoding='utf-8') as file:
-        base_provenance = json.load(file)
+def get_subgraph(jsonld_11: dict, node_id: str) -> dict:
+    """ Extract the subgraph corresponding to all nodes connected to a given node.
+        This was design for prov:Entity as starting node, to show the whole process
+        that was needed to generate this prov:Entity.
+    """
 
     # Input data as a RDF graph
     graph = Dataset()
-    graph.parse(StringIO(json.dumps(jsonld.expand(base_provenance))), format='json-ld')
+    graph.parse(StringIO(json.dumps(jsonld.expand(jsonld_11))), format='json-ld')
 
     # Query to construct the sub graph
     """
@@ -50,12 +44,22 @@ def entry_point(input_file: str, node_id: str, output_file: str) -> None:
         for s, _, _ in graph.query(query)]
 
     # Exclude objects that are not connected nodes
+    base_provenance = jsonld_11
     for key in base_provenance['Records'].keys():
         objects = []
         for node in base_provenance['Records'][key]:
             if node['Id'] in connected_nodes:
                 objects.append(node)
         base_provenance['Records'][key] = objects
+
+    return base_provenance
+
+def entry_point(input_file: str, node_id: str, output_file: str) -> None:
+    """ Search for all nodes linked to a prov:Entity """
+
+    # Open, read input file and create subgraph
+    with open(input_file, 'r', encoding='utf-8') as file:
+        base_provenance = get_subgraph(json.load(file), node_id)
 
     # Write output file
     with open(output_file, 'w', encoding='utf-8') as file:

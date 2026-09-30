@@ -1,0 +1,122 @@
+{
+    "@context": "https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json",
+    "Records": {
+        "Software": [
+            {
+                "Id": "bids::prov#spm-fa0baf93",
+                "AlternativeIdentifier": [
+                    "RRID:SCR_007037"
+                ],
+                "Label": "SPM",
+                "Version": "SPM12r7771"
+            },
+            {
+                "Id": "bids::prov#spm-fa0baf93",
+                "AlternativeIdentifier": [
+                    "RRID:SCR_007037"
+                ],
+                "Label": "SPM",
+                "Version": "SPM12r7771"
+            }
+        ],
+        "Activities": [
+            {
+                "Id": "bids::prov#movefile-26803be5",
+                "Label": "Move file",
+                "Used": [
+                    "bids:ds000011:sub-01/func/sub-01_task-tonecounting_bold.nii.gz"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{1}.cfg_basicio.file_dir.file_ops.file_move.files = {'data/sub-01/func/sub-01_task-tonecounting_bold.nii.gz'};\nmatlabbatch{1}.cfg_basicio.file_dir.file_ops.file_move.action.copyto = {'sub-01/func'};",
+                "StartedAtTime": "2025-05-28T14:48:00",
+                "EndedAtTime": "2025-05-28T14:48:01"
+            },
+            {
+                "Id": "bids::prov#gunzip-ca36a952",
+                "Label": "Gunzip",
+                "Used": [
+                    "urn:20953875-19dd-409d-adf1-5ff4404f8ae7"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{3}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = cfg_dep('Move/Delete Files: Moved/Copied Files', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','files'));\nmatlabbatch{3}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};\nmatlabbatch{3}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;",
+                "StartedAtTime": "2025-05-28T14:48:01",
+                "EndedAtTime": "2025-05-28T14:48:02"
+            },
+            {
+                "Id": "bids::prov#realign-acea8093",
+                "Label": "Realign",
+                "Used": [
+                    "urn:ee913e65-93fb-474a-8322-487a9894bd82"
+                ],
+                "AssociatedWith": [
+                    "bids::prov#spm-fa0baf93"
+                ],
+                "Command": "matlabbatch{5}.spm.spatial.realign.estwrite.data{1}(1) = cfg_dep('Gunzip Files: Gunzipped Files', substruct('.','val', '{}',{3}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('()',{':'}));\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.quality = 0.9;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.sep = 4;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.fwhm = 5;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.rtm = 1;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.interp = 2;\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.wrap = [0 0 0];\nmatlabbatch{5}.spm.spatial.realign.estwrite.eoptions.weight = '';\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.which = [2 1];\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.interp = 4;\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.wrap = [0 0 0];\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.mask = 1;\nmatlabbatch{5}.spm.spatial.realign.estwrite.roptions.prefix = 'r';",
+                "StartedAtTime": "2025-05-28T14:48:03",
+                "EndedAtTime": "2025-05-28T14:48:12"
+            }
+        ],
+        "Files": [
+            {
+                "Id": "bids:ds000011:sub-01/func/sub-01_task-tonecounting_bold.nii.gz",
+                "Label": "sub-01_task-tonecounting_bold.nii.gz",
+                "AtLocation": "sub-01/func/sub-01_task-tonecounting_bold.nii.gz",
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "c02dc3b622a92fdcdaacb1dd198cd45b4004f326dd1f1abbc4be15a5e4cbc57d"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:20953875-19dd-409d-adf1-5ff4404f8ae7",
+                "Label": "sub-01_task-tonecounting_bold.nii.gz",
+                "AtLocation": "sub-01/func/sub-01_task-tonecounting_bold.nii.gz",
+                "GeneratedBy": [
+                    "bids::prov#movefile-26803be5"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "c02dc3b622a92fdcdaacb1dd198cd45b4004f326dd1f1abbc4be15a5e4cbc57d"
+                    }
+                ]
+            },
+            {
+                "Id": "urn:ee913e65-93fb-474a-8322-487a9894bd82",
+                "Label": "sub-01_task-tonecounting_bold.nii",
+                "AtLocation": "sub-01/func/sub-01_task-tonecounting_bold.nii",
+                "GeneratedBy": [
+                    "bids::prov#gunzip-ca36a952"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "672fafcd016b2442fcb7df90a6893a97cb1cd19fb70361dc70fb81d755ff74ea"
+                    }
+                ]
+            },
+            {
+                "Id": "bids::sub-01/func/meansub-01_task-tonecounting_bold.nii",
+                "Label": "meansub-01_task-tonecounting_bold.nii",
+                "AtLocation": "sub-01/func/meansub-01_task-tonecounting_bold.nii",
+                "GeneratedBy": [
+                    "bids::prov#realign-acea8093"
+                ],
+                "Checksum": [
+                    {
+                        "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+                        "ChecksumValue": "a4a7dd08d305ada75d3c3643dc5f1b96a6d5d94657f8aea79b6d15431845179a"
+                    }
+                ]
+            }
+        ],
+        "Datasets": [],
+        "prov:Entity": [],
+        "Environments": []
+    }
+}
