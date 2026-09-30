@@ -1,0 +1,11 @@
+{
+    "GeneratedBy": [
+        "bids::prov#segment-7d5d4ac5"
+    ],
+    "Checksum": [
+        {
+            "ChecksumAlgorithm": "spdx:checksumAlgorithm_sha256",
+            "ChecksumValue": "4ee9cdc19e6d2d15c79d1a0435542b302b31b576c6f40394ec1d55b3cc7351a1"
+        }
+    ]
+}

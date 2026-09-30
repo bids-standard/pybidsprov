@@ -1,0 +1,57 @@
+{
+  "@context": "https://bids-specification--2099.org.readthedocs.build/en/2099/provenance-context.json",
+  "Records": {
+    "Software": [
+      {
+        "Id": "bids::prov#fmriprep-awf6cvk6",
+        "Label": "fMRIPrep",
+        "Version": "1.1.4",
+        "AlternativeIdentifier": [
+          "RRID:SCR_016216"
+        ],
+        "ActedOnBehalfOf": "bids::prov#fmriprepdocker-BMBz4YmB"
+      },
+      {
+        "Id": "bids::prov#fmriprepdocker-BMBz4YmB",
+        "Label": "fmriprep-docker",
+        "Version": "1.1.4"
+      }
+    ],
+    "Activities": [
+      {
+        "Id": "bids::prov#preprocessing-xMpFqB5q",
+        "Label": "Preprocessing",
+        "Command": "fmriprep-docker --participant-label=001 --fs-license-file=freesurfer_license.txt -w=derivatives/work/ ds001734/ derivatives/ participant",
+        "AssociatedWith": [
+          "bids::prov#fmriprepdocker-BMBz4YmB",
+          "bids::prov#fmriprep-awf6cvk6"
+        ],
+        "Used": [
+          "bids::prov#poldracklab/fmriprep-mHl7Dqa0",
+          "bids:ds001734"
+        ]
+      }
+    ],
+    "Files": [],
+    "Datasets": [
+      {
+        "Id": "bids:ds001734",
+        "Label": "NARPS"
+      },
+      {
+        "Id": "bids::.",
+        "Label": "Outputs from fMRIPrep preprocessing",
+        "GeneratedBy": [
+          "bids::prov#preprocessing-xMpFqB5q"
+        ]
+      }
+    ],
+    "prov:Entity": [],
+    "Environments": [
+      {
+        "Id": "bids::prov#poldracklab/fmriprep-mHl7Dqa0",
+        "Label": "poldracklab/fmriprep:1.1.4"
+      }    
+    ]
+  }
+}
