@@ -81,6 +81,8 @@ jobs:
           allow-prereleases: true
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
+      - name: Install Graphviz
+        run: sudo apt install -y graphviz
       - name: Install bids_prov
         run: uv sync --group tests
       - name: Get tests and test data
