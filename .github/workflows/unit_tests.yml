@@ -97,6 +97,9 @@ jobs:
           python -m pytest --cov=./
       - name: Install bids_prov
         if: matrix.source == 'sdist'
+        run: uv sync
+      - name: Run tests
+        if: matrix.source == 'sdist'
         run: |
-          uv sync
+          source .venv/bin/activate
           bids_prov -h
