@@ -88,14 +88,15 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: brew install graphviz
       - name: Install bids_prov
+        if: matrix.source == 'repo'
         run: uv sync --group tests
-      - name: Get tests and test data
-        if: matrix.source == 'sdist'
-        uses: actions/checkout@v7
-        with:
-          sparse-checkout: |
-            tests
       - name: Run tests
+        if: matrix.source == 'repo'
         run: |
           source .venv/bin/activate
           python -m pytest --cov=./
+      - name: Install bids_prov
+        if: matrix.source == 'sdist'
+        run: |
+          uv sync
+          bids_prov -h
