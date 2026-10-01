@@ -6,11 +6,7 @@ For more information about BIDS, visit https://bids.neuroimaging.io.
 
 ## Installation
 
-PyBIDSProv is most easily installed from pip. To install the latest official release:
-
-```shell
-pip install pybidsprov
-```
+Meanwhile PyBIDSProv is available from pip, it can be installed after cloning the repository (see. [§ Development and testing](#development-and-testing).
 
 ## Usage
 
@@ -18,8 +14,8 @@ PyBIDSProv consists in a main command line tool `bids_prov`, giving access to se
 
 - `merge`: Aggregates all provenance metadata available in a BIDS dataset to generate a provenance graph inside a single JSON-LD file.
 - `extract`: Isolates the provenance graph of a given prov:Entity (e.g. a file, dataset or another prov:Entity) and generates a provenance graph inside a JSON-LD file.
-- `check`: Perform a sanity check on a proveance graph contained in a JSON-LD file.
-- `visualize`: Generates an image (*graphviz* graph) representing a proveance graph contained in a JSON-LD file.
+- `check`: Perform a sanity check on a provenance graph contained in a JSON-LD file.
+- `visualize`: Generates an image (*graphviz* graph) representing a provenance graph contained in a JSON-LD file.
 
 ### `bids_prov merge` - Aggregate the provenance metadata of a BIDS dataset
 
