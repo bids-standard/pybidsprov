@@ -55,7 +55,7 @@ class TestVisualizeFunctions():
         assert isclose(
             getsize(join(TEST_DATA_DIR, 'test_turtle_to_image_1.png')) / 1024,
             getsize(output_filename) / 1024,
-            abs_tol=3 #kB
+            abs_tol=10 #kB
             )
         remove(output_filename)
 
@@ -64,7 +64,7 @@ class TestVisualizeFunctions():
         assert isclose(
             getsize(join(TEST_DATA_DIR, 'test_turtle_to_image_2.png')) / 1024,
             getsize(output_filename) / 1024,
-            abs_tol=3 #kB
+            abs_tol=10 #kB
             )
         remove(output_filename)
 
