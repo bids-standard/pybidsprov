@@ -47,22 +47,22 @@ expected_data_2 = """
     @prefix prov: <http://www.w3.org/ns/prov#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-    <bids::.> a prov:Collection ;
+    <bids:ds> a prov:Collection ;
         a prov:Entity ;
         rdfs:label "Current dataset" ;
         prov:wasGeneratedBy <bids::prov#activity_1> .
 
-    <bids:ds000011:.> a prov:Collection ;
+    <bids:ds000011> a prov:Collection ;
         a prov:Entity ;
         rdfs:label "ds00011" .
 
     <bids::prov#activity_1> a prov:Activity ;
         rdfs:label "Activity 1" ;
-        prov:used <bids:ds000011:.> .
+        prov:used <bids:ds000011> .
 
     <bids::prov#activity_2> a prov:Activity ;
         rdfs:label "Activity 2" ;
-        prov:used <bids::.> .
+        prov:used <bids:ds> .
     """
 
 expected_data_3 = """

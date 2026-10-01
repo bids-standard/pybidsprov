@@ -86,4 +86,4 @@ class TestCheckFunctions():
         caplog.set_level(INFO)
         caplog.clear()
         entry_point(None, TEST_DIR, True, False)
-        assert len(caplog.records) == 55
+        assert len(caplog.records) == 75
