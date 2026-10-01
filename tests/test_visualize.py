@@ -29,7 +29,7 @@ class TestVisualizeFunctions():
     @staticmethod
     def test_subtype_datasets(helpers):
         """ Test the subtype_dataset function"""
-        helpers.compare_graphs(subtype_datasets(test_data), expected_data_2)
+        helpers.compare_graphs(subtype_datasets(expected_data_1), expected_data_2)
 
     @staticmethod
     def test_turtle_to_image():
@@ -54,17 +54,16 @@ class TestVisualizeFunctions():
         # Byte size comparison
         assert isclose(
             getsize(join(TEST_DATA_DIR, 'test_turtle_to_image_1.png')) / 1024,
-            getsize('test_turtle_to_image.png') / 1024,
+            getsize(output_filename) / 1024,
             abs_tol=1 #kB
             )
-
         remove(output_filename)
 
-        turtle_to_image(expected_data_1, output_filename, True)
+        turtle_to_image(expected_data_2, output_filename, True)
         assert exists(output_filename)
         assert isclose(
             getsize(join(TEST_DATA_DIR, 'test_turtle_to_image_2.png')) / 1024,
-            getsize('test_turtle_to_image.png') / 1024,
+            getsize(output_filename) / 1024,
             abs_tol=1 #kB
             )
         remove(output_filename)
