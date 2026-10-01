@@ -4,9 +4,9 @@
 """ Tests for the bids_prov.visualize module """
 
 from os import remove
-from os.path import abspath, join, exists
+from os.path import abspath, join, exists, getsize
+from math import isclose
 import json
-from filecmp import cmp
 
 from bids_prov.visualize import (
     replace_dataset_ids, subtype_datasets, turtle_to_image,
@@ -33,7 +33,13 @@ class TestVisualizeFunctions():
 
     @staticmethod
     def test_turtle_to_image():
-        """ Test the turtle_to_image function"""
+        """ Test the turtle_to_image function
+    
+            From the same input graph, two output images from graphviz will not necessarly be
+            the same bytewise or even pixelwise (although they represent the same graph).
+            Therefore, we cannot compare them with e.g. filecmp.cmp
+            In this method, the test assumes that their size in kilobytes will approx. be the same.
+        """
 
         output_filename = 'test_turtle_to_image.png'
 
@@ -41,12 +47,26 @@ class TestVisualizeFunctions():
             remove(output_filename)
         turtle_to_image(expected_data_1, output_filename, False)
         assert exists(output_filename)
-        assert cmp(output_filename, join(TEST_DATA_DIR, 'test_turtle_to_image_1.png'))
+
+        # Bytewise comparison
+        # assert filecmp.cmp(output_filename, join(TEST_DATA_DIR, 'test_turtle_to_image_1.png'))
+
+        # Byte size comparison
+        assert isclose(
+            getsize(join(TEST_DATA_DIR, 'test_turtle_to_image_1.png')) / 1024,
+            getsize('test_turtle_to_image.png') / 1024,
+            abs_tol=1 #kB
+            )
+
         remove(output_filename)
 
         turtle_to_image(expected_data_1, output_filename, True)
         assert exists(output_filename)
-        assert cmp(output_filename, join(TEST_DATA_DIR, 'test_turtle_to_image_2.png'))
+        assert isclose(
+            getsize(join(TEST_DATA_DIR, 'test_turtle_to_image_2.png')) / 1024,
+            getsize('test_turtle_to_image.png') / 1024,
+            abs_tol=1 #kB
+            )
         remove(output_filename)
 
     @staticmethod
