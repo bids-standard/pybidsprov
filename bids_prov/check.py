@@ -91,6 +91,73 @@ def analyse_activities(jsonld_11: dict):
         len(activities_not_generated))
     logger.info(activities_not_generated)
 
+def analyse_connectivity(jsonld_11: dict):
+    """ Print a report showing:
+         - All nodes that are not connected
+
+        jsonld_11: dict, input graph data to analyse
+    """
+    # Expand the input JSON-LD
+    expanded = jsonld.expand(jsonld_11)
+
+    # Open file & create graph from it
+    graph = Dataset()
+    graph.parse(StringIO(json.dumps(expanded)), format='json-ld')
+
+    # Search for all not connected prov:Activity in the data
+    query_activities = prepareQuery("""
+        SELECT ?s WHERE {
+            ?s a prov:Activity .
+            FILTER NOT EXISTS { ?s prov:used ?x } .
+            FILTER NOT EXISTS { ?s prov:wasAssociatedWith ?y } .
+            FILTER NOT EXISTS { ?z prov:wasGeneratedBy ?s } .
+            FILTER NOT EXISTS { ?t prov:wasInformedBy ?s } .
+            FILTER NOT EXISTS { ?s prov:wasInformedBy ?u } .
+        }
+        """,
+        initNs = {'prov': PROV}
+        )
+    isolated_activities = [s[0].n3(graph.namespace_manager) for s in graph.query(query_activities)]
+    logger.info('All prov:Activity that are not connected to the graph : %s',
+        len(isolated_activities))
+    logger.info(isolated_activities)
+
+    # Search for all not connected prov:Entity or prov:Collection in the data
+    query_entities = prepareQuery("""
+        SELECT ?s WHERE {
+            VALUES ?type { prov:Entity prov:Collection } 
+            ?s a ?type .
+            FILTER NOT EXISTS { ?s prov:wasGeneratedBy ?x } .
+            FILTER NOT EXISTS { ?y prov:used ?s } .
+            FILTER NOT EXISTS { ?s prov:wasDerivedForm ?z } .
+            FILTER NOT EXISTS { ?t prov:wasDerivedForm ?s } .
+            FILTER NOT EXISTS { ?s prov:wasAttributedTo ?u } .
+        }
+        """,
+        initNs = {'prov': PROV}
+        )
+    isolated_entities = [s[0].n3(graph.namespace_manager) for s in graph.query(query_entities)]
+    logger.info('All prov:Entity or prov:Collection that are not connected to the graph : %s',
+        len(isolated_entities))
+    logger.info(isolated_entities)
+
+    # Search for all not connected prov:Agent in the data
+    query_agents = prepareQuery("""
+        SELECT ?s WHERE {
+            ?s a prov:Agent .
+            FILTER NOT EXISTS { ?s prov:actedOnBehalfOf ?x } .
+            FILTER NOT EXISTS { ?y prov:actedOnBehalfOf ?s } .
+            FILTER NOT EXISTS { ?z prov:wasAttributedTo ?s } .
+            FILTER NOT EXISTS { ?t prov:wasAssociatedWith ?s } .
+        }
+        """,
+        initNs = {'prov': PROV}
+        )
+    isolated_agents = [s[0].n3(graph.namespace_manager) for s in graph.query(query_agents)]
+    logger.info('All prov:Agent that are not connected to the graph : %s',
+        len(isolated_agents))
+    logger.info(isolated_agents)
+
 def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:bool) -> None:
     """ Perform sanity check on JSON-LD BIDS-Prov file(s). """
 
@@ -114,8 +181,13 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
 
     # Analyse file(s)
     for file in file_list:
-        logger.info('Analyse activities for file %s', file)
     
         # Open JSON-LD content & analyse
         with open(file, 'r', encoding = 'utf-8') as file_stream:
-            analyse_activities(json.load(file_stream))
+            data = json.load(file_stream)
+
+        logger.info('Analyse activities for file %s', file)
+        analyse_activities(data)
+
+        logger.info('Analyse connectivity for file %s', file)
+        analyse_connectivity(data)

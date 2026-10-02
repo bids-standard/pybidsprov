@@ -100,6 +100,13 @@ bids_prov check -i tests/test_data/provenance_ds01.jsonld
 	INFO:bids_prov.check:[]
 	INFO:bids_prov.check:All prov:Activity that did not generated any prov:Entity : 1
 	INFO:bids_prov.check:['<bids::prov#preprocessing-yBHdvts7>']
+    INFO:bids_prov.check:Analyse connectivity for file tests/test_data/provenance_ds01.jsonld
+    INFO:bids_prov.check:All prov:Activity that are not connected to the graph : 0
+    INFO:bids_prov.check:[]
+    INFO:bids_prov.check:All prov:Entity or prov:Collection that are not connected to the graph : 0
+    INFO:bids_prov.check:[]
+    INFO:bids_prov.check:All prov:Agent that are not connected to the graph : 0
+    INFO:bids_prov.check:[]
 ```
 
 ## `bids_prov visualize` examples
