@@ -8,8 +8,11 @@ import glob
 from io import StringIO
 import json
 import logging
+from importlib import resources
 
 from pyld import jsonld
+
+from jsonschema import Draft202012Validator
 
 from rdflib import Dataset
 from rdflib.namespace import PROV
@@ -90,6 +93,15 @@ def analyse_activities(jsonld_11: dict):
     logger.info('All prov:Activity that did not generated any prov:Entity : %s',
         len(activities_not_generated))
     logger.info(activities_not_generated)
+
+def validate(jsonld_11: dict) -> bool:
+    """ Validate JSON-LD content against the BIDS-Prov JSON schema """
+
+    with open(resources.path('bids_prov','schema.json'), 'r', encoding='utf-8') as schema_file:
+        schema = json.load(schema_file)
+
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(jsonld_11)
 
 def analyse_connectivity(jsonld_11: dict):
     """ Print a report showing:
@@ -191,3 +203,6 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
 
         logger.info('Analyse connectivity for file %s', file)
         analyse_connectivity(data)
+
+        logger.info('Validate file %s', file)        
+        validate(data)
