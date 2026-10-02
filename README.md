@@ -81,8 +81,11 @@ bids_prov check -h
 
 Pass a JSON-LD file or a directory containing JSON-LD files to perform sanity checks on the corresponding provenance graphs.
 This will list:
-* All prov:Activities that did not use any prov:Entity.
-* All prov:Activity that did not generate any prov:Entity.
+* All prov:Activities that did not use any prov:Entity;
+* All prov:Activity that did not generate any prov:Entity;
+* All prov:Activity that are not connected to the graph;
+* All prov:Entity or prov:Collection that are not connected to the graph;
+* All prov:Agent that are not connected to the graph.
 
 ### `bids_prov visualize` - Visualize a provenance graph as an image
 
