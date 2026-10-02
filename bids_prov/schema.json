@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "@context": {
+      "type": "string",
+      "format": "uri"
+    },
+    "Records": {
+      "type": "object",
+      "properties": {
+        "Software": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "Label": {
+                "type": "string"
+              },
+              "Version": {
+                "type": "string"
+              },
+              "AlternativeIdentifier": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "ActedOnBehalfOf": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "required": ["Id", "Label", "Version"],
+            "additionalProperties": true
+          },
+          "uniqueItems": true
+        },
+        "Activities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "Label": {
+                "type": "string"
+              },
+              "Command": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "AssociatedWith": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Used": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Type": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "StartedAtTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "EndedAtTime": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": ["Id", "Label", "Command"],
+            "additionalProperties": true
+          },
+          "uniqueItems": true
+        },
+        "Files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "Label": {
+                "type": "string"
+              },
+              "Checksum": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ChecksumAlgorithm": {
+                      "type": "string"
+                    },
+                    "ChecksumValue": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "AtLocation": {
+                "type": "string"
+              },
+              "GeneratedBy": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Type": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "required": ["Id", "Label"],
+            "additionalProperties": true
+          },
+          "uniqueItems": true
+        },
+        "Datasets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "Label": {
+                "type": "string"
+              },
+              "GeneratedBy": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "required": ["Id", "Label"],
+            "additionalProperties": true
+          },
+          "uniqueItems": true
+        },
+        "prov:Entity": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "Label": {
+                "type": "string"
+              },
+              "Checksum": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ChecksumAlgorithm": {
+                      "type": "string"
+                    },
+                    "ChecksumValue": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "GeneratedBy": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Type": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "required": ["Id", "Label"],
+            "additionalProperties": true
+          },
+          "uniqueItems": true
+        },
+        "Environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "Label": {
+                "type": "string"
+              },
+              "AlternativeIdentifier": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "EnvironmentVariables": {
+                "type": "object"
+              },
+              "OperatingSystem": {
+                "type": "string"
+              },
+              "Dependencies": {
+                "type": "object"
+              }
+            },
+            "required": ["Id", "Label"],
+            "additionalProperties": true
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

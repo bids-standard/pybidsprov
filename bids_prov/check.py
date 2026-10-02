@@ -8,8 +8,11 @@ import glob
 from io import StringIO
 import json
 import logging
+from importlib import resources
 
 from pyld import jsonld
+
+from jsonschema import Draft202012Validator
 
 from rdflib import Dataset
 from rdflib.namespace import PROV
@@ -91,6 +94,15 @@ def analyse_activities(jsonld_11: dict):
         len(activities_not_generated))
     logger.info(activities_not_generated)
 
+def validate(jsonld_11: dict) -> bool:
+    """ Validate JSON-LD content against the BIDS-Prov JSON schema """
+
+    with open(resources.path('bids_prov','schema.json'), 'r', encoding='utf-8') as schema_file:
+        schema = json.load(schema_file)
+
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema).validate(jsonld_11)
+
 def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:bool) -> None:
     """ Perform sanity check on JSON-LD BIDS-Prov file(s). """
 
@@ -118,4 +130,6 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
     
         # Open JSON-LD content & analyse
         with open(file, 'r', encoding = 'utf-8') as file_stream:
-            analyse_activities(json.load(file_stream))
+            data = json.load(file_stream)
+            analyse_activities(data)
+            validate(data)
