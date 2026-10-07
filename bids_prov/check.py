@@ -19,7 +19,7 @@ from rdflib.plugins.sparql import prepareQuery
 
 logger = logging.getLogger(__name__)
 
-JSON_SCHEMA = resources.path('bids_prov','schema.json')
+JSON_SCHEMA = resources.read_text('bids_prov', 'schema.json', encoding='utf-8')
 
 def analyse_activities(jsonld_11: dict):
     """ Print a report showing:
@@ -106,11 +106,8 @@ def analyse_activities(jsonld_11: dict):
 def validate(jsonld_11: dict) -> bool:
     """ Validate JSON-LD content against the BIDS-Prov JSON schema """
 
-    with open(JSON_SCHEMA, 'r', encoding='utf-8') as schema_file:
-        schema = json.load(schema_file)
-
     # Setup and run validator
-    validator = Draft202012Validator(schema)
+    validator = Draft202012Validator(json.loads(JSON_SCHEMA))
     errors = sorted(validator.iter_errors(jsonld_11), key=lambda e: e.path)
 
     # Display errors from validator as log lines

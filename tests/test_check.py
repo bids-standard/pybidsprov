@@ -198,10 +198,9 @@ class TestCheckFunctions():
     def test_schema():
         """ Test the JSON schema """
 
-        assert exists(JSON_SCHEMA)
-
-        with open(JSON_SCHEMA, 'r', encoding='utf-8') as schema_file:
-            Draft202012Validator.check_schema(json.load(schema_file))
+        schema = json.loads(JSON_SCHEMA)
+        assert schema != {}
+        Draft202012Validator.check_schema(schema)
 
     @staticmethod
     def test_validate(caplog):
