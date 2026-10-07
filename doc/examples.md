@@ -95,18 +95,18 @@ You can compare it with the provenance of the whole dataset:
 In this example, we check the graph contained in the [tests/test_data/provenance_ds01.jsonld](/tests/test_data/provenance_ds01.jsonld) file:
 
 ```shell
-bids_prov check -i tests/test_data/provenance_ds01.jsonld
-	INFO:bids_prov.check:All prov:Activities that did not use any prov:Entity : 0
-	INFO:bids_prov.check:[]
-	INFO:bids_prov.check:All prov:Activity that did not generated any prov:Entity : 1
-	INFO:bids_prov.check:['<bids::prov#preprocessing-yBHdvts7>']
-    INFO:bids_prov.check:Analyse connectivity for file tests/test_data/provenance_ds01.jsonld
+bids_prov check -i tests/test_data/test_check_1.jsonld
+    INFO:bids_prov.check:Analyse activities for file tests/test_data/test_check_1.jsonld
+    WARNING:bids_prov.check:All prov:Activities that did not use any prov:Entity : 2
+    INFO:bids_prov.check:['<bids::prov#preprocessing-yBHdvts7>', '<bids::prov#movefile-26803be5>']
+    INFO:bids_prov.check:All prov:Activity that did not generated any prov:Entity : 0
+    INFO:bids_prov.check:Analyse connectivity for file tests/test_data/test_check_1.jsonld
     INFO:bids_prov.check:All prov:Activity that are not connected to the graph : 0
-    INFO:bids_prov.check:[]
-    INFO:bids_prov.check:All prov:Entity or prov:Collection that are not connected to the graph : 0
-    INFO:bids_prov.check:[]
+    WARNING:bids_prov.check:All prov:Entity or prov:Collection that are not connected to the graph : 2
+    INFO:bids_prov.check:['<bids:ds000011:sub-01/func/sub-01_task-tonecounting_bold.nii.gz>', '<bids:ds000011>']
     INFO:bids_prov.check:All prov:Agent that are not connected to the graph : 0
-    INFO:bids_prov.check:[]
+    INFO:bids_prov.check:Validate file tests/test_data/test_check_1.jsonld
+    ERROR:bids_prov.check:In $.Records.Software: [{'Id': 'bids::prov#spm-fa0baf93', 'AlternativeIdentifier': ['RRID:SCR_007037'], 'Label': 'SPM', 'Version': 'SPM12r7771'}, {'Id': 'bids::prov#spm-fa0baf93', 'AlternativeIdentifier': ['RRID:SCR_007037'], 'Label': 'SPM', 'Version': 'SPM12r7771'}] has non-unique elements
 ```
 
 ## `bids_prov visualize` examples
