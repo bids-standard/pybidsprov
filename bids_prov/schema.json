@@ -3,8 +3,15 @@
   "type": "object",
   "properties": {
     "@context": {
-      "type": "string",
-      "format": "uri"
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "object"
+        }
+      ]
     },
     "Records": {
       "type": "object",
@@ -29,14 +36,16 @@
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               },
               "ActedOnBehalfOf": {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               }
             },
             "required": ["Id", "Label", "Version"],
@@ -71,21 +80,24 @@
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               },
               "Used": {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               },
               "Type": {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               },
               "StartedAtTime": {
                 "type": "string",
@@ -125,7 +137,8 @@
                       "type": "string"
                     }
                   }
-                }
+                },
+                "uniqueItems": true
               },
               "AtLocation": {
                 "type": "string"
@@ -135,14 +148,16 @@
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                            "uniqueItems": true
               },
               "Type": {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               }
             },
             "required": ["Id", "Label"],
@@ -167,7 +182,8 @@
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               }
             },
             "required": ["Id", "Label"],
@@ -199,21 +215,24 @@
                       "type": "string"
                     }
                   }
-                }
+                },
+                "uniqueItems": true
               },
               "GeneratedBy": {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               },
               "Type": {
                 "type": "array",
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               }
             },
             "required": ["Id", "Label"],
@@ -238,7 +257,8 @@
                 "items": {
                   "type": "string",
                   "format": "uuid"
-                }
+                },
+                "uniqueItems": true
               },
               "EnvironmentVariables": {
                 "type": "object"
@@ -255,7 +275,11 @@
           },
           "uniqueItems": true
         }
-      }
+      },
+      "required": ["Software", "Activities", "Files", "Datasets", "prov:Entity", "Environments"],
+      "additionalProperties": false
     }
-  }
+  },
+  "required": ["@context", "Records"],
+  "additionalProperties": false
 }

@@ -3,7 +3,6 @@
 
 """ This module allows to perform sanity checks on JSON-LD BIDS-Prov files. """
 
-from argparse import ArgumentParser
 import glob
 from io import StringIO
 import json
@@ -19,6 +18,8 @@ from rdflib.namespace import PROV
 from rdflib.plugins.sparql import prepareQuery
 
 logger = logging.getLogger(__name__)
+
+JSON_SCHEMA = resources.path('bids_prov','schema.json')
 
 def analyse_activities(jsonld_11: dict):
     """ Print a report showing:
@@ -76,7 +77,7 @@ def analyse_activities(jsonld_11: dict):
     # Search for all prov:Activity that generated entities
     query = prepareQuery("""
         SELECT ?s ?p ?o WHERE {
-            VALUES ?type { prov:Entity prov:Collection } 
+            VALUES ?type { prov:Entity prov:Collection }
             ?s a ?type .
             ?s prov:wasGeneratedBy ?o .
             ?s ?p ?o .
@@ -97,11 +98,16 @@ def analyse_activities(jsonld_11: dict):
 def validate(jsonld_11: dict) -> bool:
     """ Validate JSON-LD content against the BIDS-Prov JSON schema """
 
-    with open(resources.path('bids_prov','schema.json'), 'r', encoding='utf-8') as schema_file:
+    with open(JSON_SCHEMA, 'r', encoding='utf-8') as schema_file:
         schema = json.load(schema_file)
 
-    Draft202012Validator.check_schema(schema)
-    Draft202012Validator(schema).validate(jsonld_11)
+    # Setup and run validator
+    validator = Draft202012Validator(schema)
+    errors = sorted(validator.iter_errors(jsonld_11), key=lambda e: e.path)
+
+    # Display errors from validator as log lines
+    for error in errors:
+        logger.error('In %s: %s', error.json_path, error.message)
 
 def analyse_connectivity(jsonld_11: dict):
     """ Print a report showing:
@@ -137,7 +143,7 @@ def analyse_connectivity(jsonld_11: dict):
     # Search for all not connected prov:Entity or prov:Collection in the data
     query_entities = prepareQuery("""
         SELECT ?s WHERE {
-            VALUES ?type { prov:Entity prov:Collection } 
+            VALUES ?type { prov:Entity prov:Collection }
             ?s a ?type .
             FILTER NOT EXISTS { ?s prov:wasGeneratedBy ?x } .
             FILTER NOT EXISTS { ?y prov:used ?s } .
@@ -193,7 +199,7 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
 
     # Analyse file(s)
     for file in file_list:
-    
+
         # Open JSON-LD content & analyse
         with open(file, 'r', encoding = 'utf-8') as file_stream:
             data = json.load(file_stream)
@@ -204,5 +210,5 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
         logger.info('Analyse connectivity for file %s', file)
         analyse_connectivity(data)
 
-        logger.info('Validate file %s', file)        
+        logger.info('Validate file %s', file)
         validate(data)
