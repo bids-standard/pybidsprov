@@ -25,6 +25,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps."
 ]
 dependencies = [
+    "bids_prov",
     "graphviz>=0.20.3",
     "rdflib>=7.0.0",
     "rdflib-jsonld>=0.6.2",
