@@ -25,7 +25,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps."
 ]
 dependencies = [
-    "bids_prov",
     "graphviz>=0.20.3",
     "rdflib>=7.0.0",
     "rdflib-jsonld>=0.6.2",
@@ -54,3 +53,6 @@ bids_prov = "bids_prov:entry_point"
 [build-system]
 requires = ["setuptools>=78.1.0", "wheel>=0.45.1"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+bids_prov = ["schema.json"]

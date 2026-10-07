@@ -198,9 +198,8 @@ class TestCheckFunctions():
     def test_schema():
         """ Test the JSON schema """
 
-        schema = json.loads(JSON_SCHEMA)
-        assert schema != {}
-        Draft202012Validator.check_schema(schema)
+        assert JSON_SCHEMA != {}
+        Draft202012Validator.check_schema(JSON_SCHEMA)
 
     @staticmethod
     def test_validate(caplog):
