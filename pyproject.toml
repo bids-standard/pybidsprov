@@ -32,7 +32,8 @@ dependencies = [
     "prov[graph]>=2.0.0",
     "pydot>=2.0.0",
     "pyld>=2.0.4",
-    "pybids>=0.20.0"
+    "pybids>=0.20.0",
+    "jsonschema>=4.26.0"
 ]
 
 [dependency-groups]
@@ -52,3 +53,6 @@ bids_prov = "bids_prov:entry_point"
 [build-system]
 requires = ["setuptools>=78.1.0", "wheel>=0.45.1"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+bids_prov = ["schema.json"]

@@ -3,19 +3,23 @@
 
 """ This module allows to perform sanity checks on JSON-LD BIDS-Prov files. """
 
-from argparse import ArgumentParser
 import glob
 from io import StringIO
 import json
 import logging
+from importlib import resources
 
 from pyld import jsonld
+
+from jsonschema import Draft202012Validator
 
 from rdflib import Dataset
 from rdflib.namespace import PROV
 from rdflib.plugins.sparql import prepareQuery
 
 logger = logging.getLogger(__name__)
+
+JSON_SCHEMA = json.loads(resources.read_text('bids_prov', 'schema.json', encoding='utf-8'))
 
 def analyse_activities(jsonld_11: dict):
     """ Print a report showing:
@@ -66,14 +70,18 @@ def analyse_activities(jsonld_11: dict):
 
     # Report all prov:Activity that that did not use anything
     activities_not_used = [s for s in all_activities if s not in activities_that_used]
-    logger.info('All prov:Activities that did not use any prov:Entity : %s',
-        len(activities_not_used))
-    logger.info(activities_not_used)
+    nb_activities = len(activities_not_used)
+    log_message = 'All prov:Activities that did not use any prov:Entity : %s'
+    if nb_activities == 0:
+        logger.info(log_message, nb_activities)
+    else:
+        logger.warning(log_message, nb_activities)
+        logger.info(activities_not_used)
 
     # Search for all prov:Activity that generated entities
     query = prepareQuery("""
         SELECT ?s ?p ?o WHERE {
-            VALUES ?type { prov:Entity prov:Collection } 
+            VALUES ?type { prov:Entity prov:Collection }
             ?s a ?type .
             ?s prov:wasGeneratedBy ?o .
             ?s ?p ?o .
@@ -87,9 +95,24 @@ def analyse_activities(jsonld_11: dict):
         len(activities_that_generated))
 
     activities_not_generated = [s for s in all_activities if s not in activities_that_generated]
-    logger.info('All prov:Activity that did not generated any prov:Entity : %s',
-        len(activities_not_generated))
-    logger.info(activities_not_generated)
+    nb_activities = len(activities_not_generated)
+    log_message = 'All prov:Activity that did not generated any prov:Entity : %s'
+    if nb_activities == 0:
+        logger.info(log_message, nb_activities)
+    else:
+        logger.warning(log_message, nb_activities)
+        logger.info(activities_not_generated)
+
+def validate(jsonld_11: dict) -> bool:
+    """ Validate JSON-LD content against the BIDS-Prov JSON schema """
+
+    # Setup and run validator
+    validator = Draft202012Validator(JSON_SCHEMA)
+    errors = sorted(validator.iter_errors(jsonld_11), key=lambda e: e.path)
+
+    # Display errors from validator as log lines
+    for error in errors:
+        logger.error('In %s: %s', error.json_path, error.message)
 
 def analyse_connectivity(jsonld_11: dict):
     """ Print a report showing:
@@ -118,14 +141,18 @@ def analyse_connectivity(jsonld_11: dict):
         initNs = {'prov': PROV}
         )
     isolated_activities = [s[0].n3(graph.namespace_manager) for s in graph.query(query_activities)]
-    logger.info('All prov:Activity that are not connected to the graph : %s',
-        len(isolated_activities))
-    logger.info(isolated_activities)
+    nb_activities = len(isolated_activities)
+    log_message = 'All prov:Activity that are not connected to the graph : %s'
+    if nb_activities == 0:
+        logger.info(log_message, nb_activities)
+    else:
+        logger.warning(log_message, nb_activities)
+        logger.info(isolated_activities)
 
     # Search for all not connected prov:Entity or prov:Collection in the data
     query_entities = prepareQuery("""
         SELECT ?s WHERE {
-            VALUES ?type { prov:Entity prov:Collection } 
+            VALUES ?type { prov:Entity prov:Collection }
             ?s a ?type .
             FILTER NOT EXISTS { ?s prov:wasGeneratedBy ?x } .
             FILTER NOT EXISTS { ?y prov:used ?s } .
@@ -137,9 +164,13 @@ def analyse_connectivity(jsonld_11: dict):
         initNs = {'prov': PROV}
         )
     isolated_entities = [s[0].n3(graph.namespace_manager) for s in graph.query(query_entities)]
-    logger.info('All prov:Entity or prov:Collection that are not connected to the graph : %s',
-        len(isolated_entities))
-    logger.info(isolated_entities)
+    nb_entities = len(isolated_entities)
+    log_message = 'All prov:Entity or prov:Collection that are not connected to the graph : %s'
+    if nb_entities == 0:
+        logger.info(log_message, nb_entities)
+    else:
+        logger.warning(log_message, nb_entities)
+        logger.info(isolated_entities)
 
     # Search for all not connected prov:Agent in the data
     query_agents = prepareQuery("""
@@ -154,9 +185,13 @@ def analyse_connectivity(jsonld_11: dict):
         initNs = {'prov': PROV}
         )
     isolated_agents = [s[0].n3(graph.namespace_manager) for s in graph.query(query_agents)]
-    logger.info('All prov:Agent that are not connected to the graph : %s',
-        len(isolated_agents))
-    logger.info(isolated_agents)
+    nb_agents = len(isolated_agents)
+    log_message = 'All prov:Agent that are not connected to the graph : %s'
+    if nb_agents == 0:
+        logger.info(log_message, nb_agents)
+    else:
+        logger.warning(log_message, nb_agents)
+        logger.info(isolated_agents)
 
 def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:bool) -> None:
     """ Perform sanity check on JSON-LD BIDS-Prov file(s). """
@@ -181,7 +216,7 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
 
     # Analyse file(s)
     for file in file_list:
-    
+
         # Open JSON-LD content & analyse
         with open(file, 'r', encoding = 'utf-8') as file_stream:
             data = json.load(file_stream)
@@ -191,3 +226,6 @@ def entry_point(input_file:str, input_directory:str, recursive:bool, verbose:boo
 
         logger.info('Analyse connectivity for file %s', file)
         analyse_connectivity(data)
+
+        logger.info('Validate file %s', file)
+        validate(data)
