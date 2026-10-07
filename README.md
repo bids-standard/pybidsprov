@@ -82,13 +82,14 @@ bids_prov check -h
 Pass a JSON-LD file or a directory containing JSON-LD files to perform sanity checks on the corresponding provenance graphs.
 This will perform the following checks:
 
-1. Connectivity
+1. Suspicious activities
 	* List all prov:Activities that did not use any prov:Entity;
 	* List all prov:Activity that did not generate any prov:Entity;
+2. Graph connectivity
 	* List all prov:Activity that are not connected to the graph;
 	* List all prov:Entity or prov:Collection that are not connected to the graph;
 	* List all prov:Agent that are not connected to the graph.
-2. Validation against the schema (see [bids_prov/schema.json](/bids_prov/schema.json))
+3. Validation against the schema (see [bids_prov/schema.json](/bids_prov/schema.json))
 
 ### `bids_prov visualize` - Visualize a provenance graph as an image
 
